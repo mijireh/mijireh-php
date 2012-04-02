@@ -16,7 +16,6 @@ class Mijireh_Order extends Mijireh_Model {
       'first_name' => '',
       'last_name' => '',
       'meta_data' => array(),
-      'subtotal' => '',
       'tax' => '',
       'shipping' => '',
       'discount' => '',
@@ -148,7 +147,7 @@ class Mijireh_Order extends Mijireh_Model {
    * 
    * @return int
    */
-  public function add_item($name, $price=0, $quantity=1, $sku='') {
+  public function add_item($name, $price, $quantity=1, $sku='') {
     $item = '';
     if(is_object($name) && get_class($name) == 'Mijireh_Item') {
       $item = $name;

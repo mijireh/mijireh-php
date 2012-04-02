@@ -20,6 +20,12 @@ class Mijireh_Item extends Mijireh_Model {
     }
   }
   
+  private function _check_quantity() {
+    if($this->_data['quantity'] < 1) {
+      $this->add_error('quantity must be greater than or equal to 1');
+    }
+  }
+  
   public function __construct() {
     $this->_init();
   }
@@ -44,10 +50,8 @@ class Mijireh_Item extends Mijireh_Model {
   
   public function validate() {
     $this->_check_required_fields();
+    $this->_check_quantity();
     return count($this->_errors) == 0;
   }
   
-  
-  
-
 }
