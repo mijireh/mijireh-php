@@ -1,11 +1,3 @@
-At A Glance
-============
-* [Mijireh](#mijireh)
-* [Mijireh\_Order](#mijireh_order)
-* [Mijireh\_Address](#mijireh_address)
-* [Mijireh\_Item](#mijireh_item)
-
-
 Mijireh
 =======
 
