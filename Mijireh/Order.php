@@ -19,7 +19,8 @@ class Mijireh_Order extends Mijireh_Model {
       'tax' => '',
       'shipping' => '',
       'discount' => '',
-      'shipping_address' => array()
+      'shipping_address' => array(),
+      'billing_address' => array()
     );
   }
   
@@ -75,7 +76,14 @@ class Mijireh_Order extends Mijireh_Model {
         if(is_array($value)) {
           $address = new Mijireh_Address();
           $address->copy_from($value);
-          $this->set_address($address);
+          $this->set_shipping_address($address);
+        }
+      }
+      elseif($key == 'billing_address') {
+        if(is_array($value)) {
+          $address = new Mijireh_Address();
+          $address->copy_from($value);
+          $this->set_billing_address($address);
         }
       }
       elseif($key == 'meta_data') {
@@ -147,7 +155,7 @@ class Mijireh_Order extends Mijireh_Model {
    * 
    * @return int
    */
-  public function add_item($name, $price, $quantity=1, $sku='') {
+  public function add_item($name, $price=0, $quantity=1, $sku='') {
     $item = '';
     if(is_object($name) && get_class($name) == 'Mijireh_Item') {
       $item = $name;
@@ -208,7 +216,7 @@ class Mijireh_Order extends Mijireh_Model {
     return count($this->_errors) == 0;
   }
   
-  public function set_address(Mijireh_Address $address) {
+  public function set_shipping_address(Mijireh_Address $address) {
     if($address->validate()) {
       $this->_data['shipping_address'] = $address->get_data();
     }
@@ -217,11 +225,29 @@ class Mijireh_Order extends Mijireh_Model {
     }
   }
   
-  public function get_address() {
+  public function set_billing_address(Mijireh_Address $address) {
+    if($address->validate()) {
+      $this->_data['billing_address'] = $address->get_data();
+    }
+    else {
+      throw new Mijireh_Exception('invalid shipping address');
+    }
+  }
+  
+  public function get_shipping_address() {
     $address = false;
     if(is_array($this->_data['shipping_address'])) {
       $address = new Mijireh_Address();
       $address->copy_from($this->_data['shipping_address']);
+    }
+    return $address;
+  }
+  
+  public function get_billing_address() {
+    $address = false;
+    if(is_array($this->_data['billing_address'])) {
+      $address = new Mijireh_Address();
+      $address->copy_from($this->_data['billing_address']);
     }
     return $address;
   }

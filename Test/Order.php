@@ -119,8 +119,33 @@ class Test_Order extends R66_Test {
     $address = new Mijireh_Address();
     $address->copy_from($address_data);
     
-    $order->set_address($address);
-    if($address = $order->get_address() && $address->validate()) {
+    $order->set_shipping_address($address);
+    if($address = $order->get_shipping_address() && $address->validate()) {
+      $passed = true;
+    }
+    $this->check($passed);
+  }
+  
+  public function test_an_order_should_be_able_to_have_a_valid_billing_address() {
+    $passed = false;
+    $order = new Mijireh_Order();
+    $order->copy_from($this->_get_order_data_array());
+    
+    $address_data = array(
+      'street' => '4321 Test Dr',
+      'city' => 'Lanexa',
+      'state_province' => 'VA',
+      'zip_code' => '23089',
+      'country' => 'US',
+      'company' => 'Reality66 LLC',
+      'apt_suite' => '8808',
+      'phone' => '804-557-7066'
+    );
+    $address = new Mijireh_Address();
+    $address->copy_from($address_data);
+    
+    $order->set_billing_address($address);
+    if($address = $order->get_billing_address() && $address->validate()) {
       $passed = true;
     }
     $this->check($passed);
@@ -224,6 +249,15 @@ class Test_Order extends R66_Test {
       'discount' => 0,
       'shipping_address' => array(
         'street' => '1234 Test Dr',
+        'city' => 'Lanexa',
+        'state_province' => 'VA',
+        'zip_code' => '23089',
+        'country' => 'US',
+        'apt_suite' => '3rd Floor',
+        'phone' => '888-888-8888',
+      ),
+      'billing_address' => array(
+        'street' => '4321 Test Dr',
         'city' => 'Lanexa',
         'state_province' => 'VA',
         'zip_code' => '23089',
