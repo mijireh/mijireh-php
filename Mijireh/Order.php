@@ -3,6 +3,7 @@ class Mijireh_Order extends Mijireh_Model {
   
   private function _init() {
     $this->_data = array(
+      'partner_id' => null,
       'order_number' => null,
       'mode' => null,
       'status' => null,
@@ -216,6 +217,13 @@ class Mijireh_Order extends Mijireh_Model {
     return count($this->_errors) == 0;
   }
   
+  /**
+   * Alias for set_shipping_address()
+   */
+  public function set_address(Mijireh_Address $address){ 
+    $this->set_shipping_address($address);
+  }
+  
   public function set_shipping_address(Mijireh_Address $address) {
     if($address->validate()) {
       $this->_data['shipping_address'] = $address->get_data();
@@ -232,6 +240,13 @@ class Mijireh_Order extends Mijireh_Model {
     else {
       throw new Mijireh_Exception('invalid shipping address');
     }
+  }
+  
+  /**
+   * Alias for get_shipping_address()
+   */
+  public function get_address() {
+    return $this->get_shipping_address();
   }
   
   public function get_shipping_address() {

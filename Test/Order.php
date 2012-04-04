@@ -221,7 +221,6 @@ class Test_Order extends R66_Test {
     $order = new Mijireh_Order($this->_order_number);
     if($order->item_count() > 0) {
       $passed = true;
-      print_r($order);
     }
     else {
       $error_message = 'order: ' . $order->order_number .' :: item count is: ' . $order->item_count;
