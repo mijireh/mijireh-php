@@ -12,7 +12,7 @@ class Mijireh_ServerError extends Mijireh_Exception {}         /* Status: 500-59
 class Mijireh_InternalError extends Mijireh_ServerError {}     /* Status: 500 */
 
 class Mijireh {
-  public static $url = 'http://mist.mijireh.com/api/1/';
+  public static $url = 'https://secure.mijireh.com/api/1/';
   public static $access_key;
   
   /**
