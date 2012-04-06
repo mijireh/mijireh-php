@@ -34,6 +34,8 @@ $address->country = 'US';
 $address->phone = '888-888-8888';
 
 $order = new Mijireh_Order();
+$order->set_shipping_address($address);
+$order->set_billing_address($address);
 $order->add_item($item);
 $order->return_url('http://www.mysite.com/store/receipt');
 $order->shipping = 5.00;
