@@ -186,6 +186,19 @@ class Mijireh_Order extends Mijireh_Model {
     $this->_data['meta_data'][$key] = $value;
   }
   
+  /**
+   * Return the value associated with the given key in the order's meta data.
+   * 
+   * If the key does not exist, return false.
+   */
+  public function get_meta_value($key) {
+    $value = fasle;
+    if(isset($this->_data['meta_data'][$key])) {
+      $value = $this->_data['meta_data'][$key];
+    }
+    return $value;
+  }
+  
   public function item_count() {
     $item_count = 0;
     if(is_array($this->_data['items'])) {
