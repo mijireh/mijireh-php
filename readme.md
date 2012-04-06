@@ -31,7 +31,7 @@ Mijireh\_Order
 
 The Mijireh_Order contains the information passed to Mijireh Checkout where the buyer will place their secure order. Mijireh\_Order contains the following attributes:
 
-* __order_number (read only)___
+* __order\_number (read only)__
 
   The order number assigned to the order after a successful purchase is completed.
   
@@ -43,7 +43,7 @@ The Mijireh_Order contains the information passed to Mijireh Checkout where the 
 
   The current status of the order (pending, complete, etc)
   
-* __order_date (read only)__
+* __order\_date (read only)__
 
   The date the order was completed. The date is based on the timezone specified in your mijireh account settings.
   
@@ -51,7 +51,7 @@ The Mijireh_Order contains the information passed to Mijireh Checkout where the 
 
   The ip address from which the order was placed. The ip address is assigned to the order when the order is completed.
   
-* __checkout_url__
+* __checkout\_url__
 
   The url to the secure mijireh server where the billing information is collected and the order is completed.
   
@@ -75,11 +75,11 @@ The Mijireh_Order contains the information passed to Mijireh Checkout where the 
 
   The customer's first name used to pre-fill the secure order form.
   
-* __last_name__
+* __last\_name__
 
   The customer's last name used to pre-fill the secure order form.
   
-* __meta_data__
+* __meta\_data__
 
   An associative array of custom information associated with the order. The meta\_data will be returned when an order is retrieved via the API and may also be used to customize the messaging on the secure order form.
   
@@ -101,7 +101,7 @@ The Mijireh_Order contains the information passed to Mijireh Checkout where the 
 
   The amount by which you want to discount the total cost of the order, such as if you are applying a coupon to the order. The discount should be a numeric value greater than or equal to zero. Do not include a currency symbol or commas in the discount amount.
   
-* __shipping_address__
+* __shipping\_address__
 
   The shipping address of the customer, used to pre-fill the order form's billing address. The shipping address will remain attached to the order and can be retrieved as part of the order via the mijireh API.
   
@@ -152,14 +152,21 @@ Functions
 
   Returns true if all of the required information is present and valid, otherwise returns false. 
   
-* __set\_address(Mijireh\_Address $address)__
+* __set\_shipping\_address(Mijireh\_Address $address)__
 
   Set the customer's shipping address on the order.
   
-* __get\_address()__
+* __get\_shipping\_address()__
 
   Returns an instance of Mijireh_Address describing the customer's shipping address.
-  
+
+* __set\_billing\_address(Mijireh\_Address $address)__
+
+  Set the customer's billing address on the order.
+
+* __get\_billing\_address()__
+
+    Returns an instance of Mijireh_Address describing the customer's shipping address.
           // Set the Mijireh access key
           Mijireh::$access_key = <your_mijireh_store_access_key>;
           
@@ -186,6 +193,8 @@ Functions
           $address->phone = '888-888-8888';
 
           $order = new Mijireh_Order();
+          $order->set_shipping_address($address);
+          $order->set_billing_address($address);
           $order->add_item($item);
           $order->return_url('http://www.mysite.com/store/receipt');
           $order->shipping = 5.00;
