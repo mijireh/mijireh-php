@@ -167,6 +167,7 @@ Functions
 * __get\_billing\_address()__
 
     Returns an instance of Mijireh_Address describing the customer's shipping address.
+    
           // Set the Mijireh access key
           Mijireh::$access_key = <your_mijireh_store_access_key>;
           

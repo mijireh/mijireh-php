@@ -1,7 +1,16 @@
 <?php 
+
+$root_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+
 if(!class_exists('Pest')) {
-  require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pest.php';
+  require_once  $root_dir . 'pest.php';
 }
+
+// Require the mijireh library classes
+require_once $root_dir . 'Mijireh/Model.php';
+require_once $root_dir . 'Mijireh/Address.php';
+require_once $root_dir . 'Mijireh/Item.php';
+require_once $root_dir . 'Mijireh/Order.php';
 
 class Mijireh_Exception extends Exception {}               
 class Mijireh_ClientError extends Mijireh_Exception {}         /* Status: 400-499 */
@@ -12,7 +21,11 @@ class Mijireh_ServerError extends Mijireh_Exception {}         /* Status: 500-59
 class Mijireh_InternalError extends Mijireh_ServerError {}     /* Status: 500 */
 
 class Mijireh {
-  public static $url = 'https://secure.mijireh.com/api/1/';
+  
+  /* Live server urls */
+  public static $base_url = 'https://secure.mijireh.com/';
+  public static $url      = 'https://secure.mijireh.com/api/1/';
+  
   public static $access_key;
   
   /**
@@ -93,4 +106,13 @@ class Mijireh {
       throw new Mijireh_ServerError($e->getMessage());
     }
   }
+  
+  public static function preview_checkout_link() {
+    if(empty(Mijireh::$access_key)) {
+      throw new Mijireh_Exception('Access key required to view checkout preview');
+    }
+    
+    return self::$base_url . 'checkout/' . self::$access_key;
+  }
+  
 }

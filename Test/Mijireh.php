@@ -8,6 +8,13 @@ class Test_Mijireh extends R66_Test {
   private $_access_key = '8539B47746D3A6C2';
   private $_order_number = '2BEE43198DC8C294';
   
+  public function test_checkout_preview_link_should_return_valid_url() {
+    $expected = 'http://mist.mijireh.com/checkout/' . $this->_access_key;
+    Mijireh::$access_key = $this->_access_key;
+    $url = Mijireh::preview_checkout_link();
+    $this->check($expected == $url, "Expecing $expected but got $url");
+  }
+  
   public function test_getting_store_info_with_correct_access_key_should_return_store_data_array() {
     $passed = false;
     $error_message = '';
