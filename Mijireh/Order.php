@@ -146,6 +146,7 @@ class Mijireh_Order extends Mijireh_Model {
     $data = parent::get_data();
     if(count($data['meta_data']) == 0) { unset($data['meta_data']); }
     if(count($data['shipping_address']) == 0) { unset($data['shipping_address']); }
+    if(count($data['billing_address']) == 0) { unset($data['billing_address']); }
     return $data;
   }
   
