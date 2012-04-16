@@ -186,6 +186,8 @@ Functions
           $item->quantity = 2;
 
           $address = new Mijireh_Address();
+          $address->first_name = 'Test';
+          $address->last_name = 'Person';
           $address->street = '1234 Test Dr.';
           $address->city = 'Lanexa';
           $address->state_province = 'VA';
@@ -214,6 +216,14 @@ Mijireh_Address
 
 A Mijireh\_Order may optionally contain a Mijireh\_Address describing the shipping address for the order. The Mijireh_Address contains the following attributes:
 
+* __first\_name__
+
+  (optional) The first name of the person associated with this address
+  
+* __last\_name__
+
+  (optional) The last name of the person associated with this address
+
 * __street (required)__
   
   The street address
@@ -236,15 +246,15 @@ A Mijireh\_Order may optionally contain a Mijireh\_Address describing the shippi
   
 * __company__
 
-  The company name is optional
+  (optional) The company name associated with this address
   
 * __apt\_suite__ 
 
-  The apartment or suite number is optional
+  (optional) The apartment or suite number
   
 * __phone__
 
-  The phone number is optional
+  (optional) The phone number
   
 Functions
 ----------
