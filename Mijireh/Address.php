@@ -7,6 +7,8 @@ class Mijireh_Address extends Mijireh_Model {
   
   public function init() {
     $this->_data = array(
+      'first_name' => '',
+      'last_name' => '',
       'street' => '',
       'city' => '',
       'state_province' => '',
