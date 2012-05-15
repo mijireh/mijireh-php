@@ -1,18 +1,17 @@
-<?php // -*- c-basic-offset: 2 -*-
+<?php
 
 /**
- * Pest is a REST client for PHP.
- *
- * See http://github.com/educoder/pest for details.
+ * Mijireh_Rest is a REST client for PHP.
  *
  * This code is licensed for use, modification, and distribution
  * under the terms of the MIT License (see http://en.wikipedia.org/wiki/MIT_License)
  */
-class Pest {
+ 
+class Mijireh_Rest {
+  
   public $curl_opts = array(
   	CURLOPT_RETURNTRANSFER => true,  // return result instead of echoing
   	CURLOPT_SSL_VERIFYPEER => false, // stop cURL from verifying the peer's certificate
-  	CURLOPT_FOLLOWLOCATION => true,  // follow redirects, Location: headers
   	CURLOPT_MAXREDIRS      => 10     // but dont redirect more than 10 times
   );
 
@@ -23,11 +22,28 @@ class Pest {
   
   public $throw_exceptions = true;
   
-  public function __construct($base_url) {
+  public function __construct($base_url, $curl_options=null) {
     if (!function_exists('curl_init')) {
-  	    throw new Exception('CURL module not available! Pest requires CURL. See http://php.net/manual/en/book.curl.php');
+  	    throw new Exception('CURL module not available! Mijireh_Rest requires CURL. See http://php.net/manual/en/book.curl.php');
   	}
     
+    if(isset($curl_options) && is_array($curl_options)) {
+      foreach($curl_options as $key => $value) {
+        
+        if($key == 'CURLOPT_FOLLOWLOCATION') {
+          // only enable CURLOPT_FOLLOWLOCATION if safe_mode and open_base_dir are not in use
+        	if(ini_get('open_basedir') == '' && !ini_get('safe_mode')) {
+        	  $this->curl_opts['CURLOPT_FOLLOWLOCATION'] = true;
+        	}
+        }
+        else {
+          $this->curl_opts[$key] = $value;
+        }
+        
+      }
+    }
+    
+  	
     $this->base_url = $base_url;
   }
   
@@ -101,17 +117,17 @@ class Pest {
   }
   
   protected function processBody($body) {
-    // Override this in classes that extend Pest.
+    // Override this in classes that extend Mijireh_Rest.
     // The body of every GET/POST/PUT/DELETE response goes through 
     // here prior to being returned.
     return $body;
   }
   
   protected function processError($body) {
-    // Override this in classes that extend Pest.
+    // Override this in classes that extend Mijireh_Rest.
     // The body of every erroneous (non-2xx/3xx) GET/POST/PUT/DELETE  
     // response goes through here prior to being used as the 'message'
-    // of the resulting Pest_Exception
+    // of the resulting Mijireh_Rest_Exception
     return $body;
   }
 
@@ -122,8 +138,9 @@ class Pest {
     }
     $curl = curl_init($url);
     
-    foreach ($opts as $opt => $val)
-      curl_setopt($curl, $opt, $val);
+    foreach ($opts as $opt => $val) {
+      @curl_setopt($curl, $opt, $val);
+    }
     
     $this->last_request = array(
       'url' => $url
@@ -170,25 +187,25 @@ class Pest {
     $err = null;
     switch ($meta['http_code']) {
       case 400:
-        throw new Pest_BadRequest($this->processError($body));
+        throw new Mijireh_Rest_BadRequest($this->processError($body));
         break;
       case 401:
-        throw new Pest_Unauthorized($this->processError($body));
+        throw new Mijireh_Rest_Unauthorized($this->processError($body));
         break;
       case 403:
-        throw new Pest_Forbidden($this->processError($body));
+        throw new Mijireh_Rest_Forbidden($this->processError($body));
         break;
       case 404:
-        throw new Pest_NotFound($this->processError($body));
+        throw new Mijireh_Rest_NotFound($this->processError($body));
         break;
       case 405:
-        throw new Pest_MethodNotAllowed($this->processError($body));
+        throw new Mijireh_Rest_MethodNotAllowed($this->processError($body));
         break;
       case 409:
-        throw new Pest_Conflict($this->processError($body));
+        throw new Mijireh_Rest_Conflict($this->processError($body));
         break;
       case 410:
-        throw new Pest_Gone($this->processError($body));
+        throw new Mijireh_Rest_Gone($this->processError($body));
         break;
       case 422:
         // Unprocessable Entity -- see http://www.iana.org/assignments/http-status-codes
@@ -196,53 +213,32 @@ class Pest {
         // a response to a request that is syntactically correct,
         // but semantically invalid (for example, when trying to 
         // create a resource with some required fields missing)
-        throw new Pest_InvalidRecord($this->processError($body));
+        throw new Mijireh_Rest_InvalidRecord($this->processError($body));
         break;
       default:
         if ($meta['http_code'] >= 400 && $meta['http_code'] <= 499)
-          throw new Pest_ClientError($this->processError($body));
+          throw new Mijireh_Rest_ClientError($this->processError($body));
         elseif ($meta['http_code'] >= 500 && $meta['http_code'] <= 599)
-          throw new Pest_ServerError($this->processError($body));
+          throw new Mijireh_Rest_ServerError($this->processError($body));
         elseif (!$meta['http_code'] || $meta['http_code'] >= 600) {
-          throw new Pest_UnknownResponse($this->processError($body));
+          throw new Mijireh_Rest_UnknownResponse($this->processError($body));
         }
     }
   }
 }
 
 
-class Pest_Exception extends Exception { }
-class Pest_UnknownResponse extends Pest_Exception { }
+class Mijireh_Rest_Exception extends Exception { }
+class Mijireh_Rest_UnknownResponse extends Mijireh_Rest_Exception { }
 
-/* 401-499 */ class Pest_ClientError extends Pest_Exception {}
-/* 400 */ class Pest_BadRequest extends Pest_ClientError {}
-/* 401 */ class Pest_Unauthorized extends Pest_ClientError {}
-/* 403 */ class Pest_Forbidden extends Pest_ClientError {}
-/* 404 */ class Pest_NotFound extends Pest_ClientError {}
-/* 405 */ class Pest_MethodNotAllowed extends Pest_ClientError {}
-/* 409 */ class Pest_Conflict extends Pest_ClientError {}
-/* 410 */ class Pest_Gone extends Pest_ClientError {}
-/* 422 */ class Pest_InvalidRecord extends Pest_ClientError {}
+/* 401-499 */ class Mijireh_Rest_ClientError extends Mijireh_Rest_Exception {}
+/* 400 */ class Mijireh_Rest_BadRequest extends Mijireh_Rest_ClientError {}
+/* 401 */ class Mijireh_Rest_Unauthorized extends Mijireh_Rest_ClientError {}
+/* 403 */ class Mijireh_Rest_Forbidden extends Mijireh_Rest_ClientError {}
+/* 404 */ class Mijireh_Rest_NotFound extends Mijireh_Rest_ClientError {}
+/* 405 */ class Mijireh_Rest_MethodNotAllowed extends Mijireh_Rest_ClientError {}
+/* 409 */ class Mijireh_Rest_Conflict extends Mijireh_Rest_ClientError {}
+/* 410 */ class Mijireh_Rest_Gone extends Mijireh_Rest_ClientError {}
+/* 422 */ class Mijireh_Rest_InvalidRecord extends Mijireh_Rest_ClientError {}
 
-/* 500-599 */ class Pest_ServerError extends Pest_Exception {}
-
-class PestJSON extends Pest
-{
-  public function post($url, $data, $headers=array()) {
-    return parent::post($url, json_encode($data), $headers);
-  }
-  
-  public function put($url, $data, $headers=array()) {
-    return parent::put($url, json_encode($data), $headers);
-  }
-
-  protected function prepRequest($opts, $url) {
-    $opts[CURLOPT_HTTPHEADER][] = 'Accept: application/json';
-    $opts[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
-    return parent::prepRequest($opts, $url);
-  }
-
-  public function processBody($body) {
-    return json_decode($body, true);
-  }
-}
+/* 500-599 */ class Mijireh_Rest_ServerError extends Mijireh_Rest_Exception {}

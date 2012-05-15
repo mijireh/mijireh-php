@@ -2,10 +2,6 @@
 
 $root_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
-if(!class_exists('Pest')) {
-  require_once  $root_dir . 'pest.php';
-}
-
 // Require the mijireh library classes
 require_once $root_dir . 'Mijireh/Model.php';
 require_once $root_dir . 'Mijireh/Address.php';
@@ -52,30 +48,30 @@ class Mijireh {
     }
     
     try {
-      $pest = new Pest($url);
-      $html = $pest->get('');
+      $rest = new Mijireh_Rest($url);
+      $html = $rest->get('');
       $data = array(
         'url' => $url,
         'html' => $html,
       );
-      $pest = new PestJSON(self::$url);
-      $pest->setupAuth(self::$access_key, '');
-      $result = $pest->post('slurps', $data);
+      $rest = new Mijireh_RestJSON(self::$url);
+      $rest->setupAuth(self::$access_key, '');
+      $result = $rest->post('slurps', $data);
       return $result['job_id'];
     }
-    catch(Pest_Unauthorized $e) {
+    catch(Mijireh_Rest_Unauthorized $e) {
       throw new Mijireh_Unauthorized("Unauthorized. Please check your api access key");
     }
-    catch(Pest_NotFound $e) {
-      throw new Mijireh_NotFound("Mijireh resource not found: " . $pest->last_request['url']);
+    catch(Mijireh_Rest_NotFound $e) {
+      throw new Mijireh_NotFound("Mijireh resource not found: " . $rest->last_request['url']);
     }
-    catch(Pest_ClientError $e) {
+    catch(Mijireh_Rest_ClientError $e) {
       throw new Mijireh_ClientError($e->getMessage());
     }
-    catch(Pest_ServerError $e) {
+    catch(Mijireh_Rest_ServerError $e) {
       throw new Mijireh_ServerError($e->getMessage());
     }
-    catch(Pest_UnknownResponse $e) {
+    catch(Mijireh_Rest_UnknownResponse $e) {
       throw new Mijireh_Exception('Unable to slurp the URL: $url');
     }
   }
@@ -84,25 +80,25 @@ class Mijireh {
    * Return an array of store information
    */
   public static function get_store_info() {
-    $pest = new PestJSON(self::$url);
-    $pest->setupAuth(self::$access_key, '');
+    $rest = new Mijireh_RestJSON(self::$url);
+    $rest->setupAuth(self::$access_key, '');
     try {
-      $result = $pest->get('store');
+      $result = $rest->get('store');
       return $result;
     }
-    catch(Pest_BadRequest $e) {
+    catch(Mijireh_Rest_BadRequest $e) {
       throw new Mijireh_BadRequest($e->getMessage());
     }
-    catch(Pest_Unauthorized $e) {
+    catch(Mijireh_Rest_Unauthorized $e) {
       throw new Mijireh_Unauthorized("Unauthorized. Please check your api access key");
     }
-    catch(Pest_NotFound $e) {
-      throw new Mijireh_NotFound("Mijireh resource not found: " . $pest->last_request['url']);
+    catch(Mijireh_Rest_NotFound $e) {
+      throw new Mijireh_NotFound("Mijireh resource not found: " . $rest->last_request['url']);
     }
-    catch(Pest_ClientError $e) {
+    catch(Mijireh_Rest_ClientError $e) {
       throw new Mijireh_ClientError($e->getMessage());
     }
-    catch(Pest_ServerError $e) {
+    catch(Mijireh_Rest_ServerError $e) {
       throw new Mijireh_ServerError($e->getMessage());
     }
   }

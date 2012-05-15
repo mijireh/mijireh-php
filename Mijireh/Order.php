@@ -37,26 +37,26 @@ class Mijireh_Order extends Mijireh_Model {
       throw new Mijireh_Exception('missing mijireh access key');
     }
     
-    $pest = new PestJSON(Mijireh::$url);
-    $pest->setupAuth(Mijireh::$access_key, '');
+    $rest = new Mijireh_RestJSON(Mijireh::$url);
+    $rest->setupAuth(Mijireh::$access_key, '');
     try {
-      $order_data = $pest->get("orders/$order_number");
+      $order_data = $rest->get("orders/$order_number");
       $this->copy_from($order_data);
       return $this;
     }
-    catch(Pest_BadRequest $e) {
+    catch(Mijireh_Rest_BadRequest $e) {
       throw new Mijireh_BadRequest($e->getMessage());
     }
-    catch(Pest_Unauthorized $e) {
+    catch(Mijireh_Rest_Unauthorized $e) {
       throw new Mijireh_Unauthorized("Unauthorized. Please check your api access key");
     }
-    catch(Pest_NotFound $e) {
-      throw new Mijireh_NotFound("Mijireh resource not found: " . $pest->last_request['url']);
+    catch(Mijireh_Rest_NotFound $e) {
+      throw new Mijireh_NotFound("Mijireh resource not found: " . $rest->last_request['url']);
     }
-    catch(Pest_ClientError $e) {
+    catch(Mijireh_Rest_ClientError $e) {
       throw new Mijireh_ClientError($e->getMessage());
     }
-    catch(Pest_ServerError $e) {
+    catch(Mijireh_Rest_ServerError $e) {
       throw new Mijireh_ServerError($e->getMessage());
     }
   }
@@ -115,26 +115,26 @@ class Mijireh_Order extends Mijireh_Model {
       throw new Mijireh_Exception($error_message);
     }
     
-    $pest = new PestJSON(Mijireh::$url);
-    $pest->setupAuth(Mijireh::$access_key, '');
+    $rest = new Mijireh_RestJSON(Mijireh::$url);
+    $rest->setupAuth(Mijireh::$access_key, '');
     try {
-      $result = $pest->post('orders', $this->get_data());
+      $result = $rest->post('orders', $this->get_data());
       $this->copy_from($result);
       return $this;
     }
-    catch(Pest_BadRequest $e) {
+    catch(Mijireh_Rest_BadRequest $e) {
       throw new Mijireh_BadRequest($e->getMessage());
     }
-    catch(Pest_Unauthorized $e) {
+    catch(Mijireh_Rest_Unauthorized $e) {
       throw new Mijireh_Unauthorized("Unauthorized. Please check your api access key");
     }
-    catch(Pest_NotFound $e) {
-      throw new Mijireh_NotFound("Mijireh resource not found: " . $pest->last_request['url']);
+    catch(Mijireh_Rest_NotFound $e) {
+      throw new Mijireh_NotFound("Mijireh resource not found: " . $rest->last_request['url']);
     }
-    catch(Pest_ClientError $e) {
+    catch(Mijireh_Rest_ClientError $e) {
       throw new Mijireh_ClientError($e->getMessage());
     }
-    catch(Pest_ServerError $e) {
+    catch(Mijireh_Rest_ServerError $e) {
       throw new Mijireh_ServerError($e->getMessage());
     }
   }
