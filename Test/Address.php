@@ -5,6 +5,8 @@ class Test_Address extends R66_Test {
   
   public function test_copy_from_should_copy_data_from_an_array_into_the_model() {
     $data = array(
+      'first_name' => 'Test',
+      'last_name' => 'Person',
       'street' => '1234 Test Dr',
       'city' => 'Lanexa',
       'state_province' => 'VA',

@@ -160,7 +160,7 @@ class Test_Order extends R66_Test {
     $this->check($passed, $error_message);
   }
   
-  public function _test_creating_an_order_should_populate_the_order_number_attribute_of_the_order() {
+  public function test_creating_an_order_should_populate_the_order_number_attribute_of_the_order() {
     $passed = false;
     $error_message = '';
     Mijireh::$access_key = $this->_access_key;
