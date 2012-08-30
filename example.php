@@ -14,7 +14,7 @@ $job_id = Mijireh::slurp('http://www.mysite.com/store/mijireh-secure-checkout');
 // create a basic order
 $order = new Mijireh_Order();
 $order->add_item('Example Product', 9.99, 1, 'example_sku');
-$order->return_url('http://www.mysite.com/store/receipt');
+$order->return_url = 'http://www.mysite.com/store/receipt';
 $order->shipping = 5.00;
 $order->total = 14.99;
 $order->create();
@@ -37,7 +37,7 @@ $order = new Mijireh_Order();
 $order->set_shipping_address($address);
 $order->set_billing_address($address);
 $order->add_item($item);
-$order->return_url('http://www.mysite.com/store/receipt');
+$order->return_url = 'http://www.mysite.com/store/receipt';
 $order->shipping = 5.00;
 $order->tax = 1.00;
 $order->discount = 3.00;
